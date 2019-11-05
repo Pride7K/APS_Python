@@ -4,10 +4,85 @@ import os
 import sys
 import random
 
+def criptografo_sucesso():
+    criptografado = Tk();
+    criptografado.geometry("300x250");
+    criptografado.resizable(False,False);
+    
+    lbl_sucesso = Label(criptografado,text="Mensagem criptografada com sucesso!!",pady=50);
+    lbl_sucesso.pack(anchor="center",fill="x");
+    
+    btn_voltar = Button(criptografado, text="Voltar para a tela Inicial",padx=5,pady=7)
+    btn_voltar.pack()
+    btn_voltar["command"] = partial(voltar_tela, criptografado);
+
+    criptografado.mainloop();
+
+    
+
 
 ################################### Criptografia ##############################################
 
 def janela_criptografia():
+
+    
+
+    def escrever_arquivo(nome, conteudo):
+        
+        nome = nome.replace(".txt", "")
+        arquivo = open(nome + ".txt", 'w')
+        
+        arquivo.writelines(conteudo)
+        arquivo.close()
+
+    def gerar_chave():     
+        #  Geração da Chave:
+        key = list(msg_chave.get())
+        
+        chave_dec = [random.randint(0,999),random.randint(0,999),random.randint(0,999)]
+
+        if key == []: key = list("Frase Padrão")      
+        for x in range(0,len(key)): key[x] = dicio_encript[key[x]]
+        
+            
+        #Algarismo 3---
+        posic   = len(key)
+        soma    = 0
+        
+        for numero in key:
+            soma  = soma + numero * posic
+            posic = posic - 1
+        while soma > 900: soma = soma / random.randint(1,5)
+        
+        chave_dec[2] = int( (soma + chave_dec[2]) / 2 )
+        
+        #Algarismo 2---
+        soma = soma / 2
+
+        for numero in range(0,3): soma = soma + (random.choice(key))
+        while soma > 900: soma = soma / random.randint(1,5)
+
+        chave_dec[1] = int( (soma + chave_dec[1]) / 2 )
+
+        #Algarismo 1----
+        soma = chave_dec[0] + chave_dec[1] + len(key)
+        soma = soma / 3
+        soma = soma + (random.randint(0,999)+random.randint(0,999)+random.randint(0,999))
+        soma = soma / 3
+        
+        while soma > 900: soma = soma / random.randint(1,5)
+        
+        chave_dec[0]   = int( (soma + chave_dec[0]) / 2 )
+
+
+        # Impressão de Chave
+        
+        chave_dec.insert(1,"-")
+        chave_dec.insert(3,"-")
+        for x in chave_dec: chave_dec[chave_dec.index(x)] = str(x)
+            
+       
+        return chave_dec
 
     def complexidade(n_celula): return (n_celula)# + int(chave_dec[4])) * int(chave_dec[0]) 
 
@@ -39,21 +114,22 @@ def janela_criptografia():
         ##chave_dec = "".join(gerar_chave())
         
         msg = str(msg_criptografia.get())
-
+        chave_dec = "".join(gerar_chave())
         msg = criptografar(msg);
 
-        lbl1_criptografia["text"] = msg
-        
-        ##print("Mensagem Criptografada e chave gerada no arquivo!! \n")
-        ##print("-------------------------------------------\n\n\n")
 
             
-        ##arquivo = ["Chave de Descriptação: {}\n".format(chave_dec)]
+        arquivo = ["Chave de Descriptação: {}\n".format(chave_dec)]
 
-        ##arquivo.extend(["-------------------------------------------\n\n"])
-        ##arquivo.extend(["Mensagem Criptografada: \n\n{}".format(msg)])
+        arquivo.extend(["-------------------------------------------\n\n"])
+        arquivo.extend(["Mensagem Criptografada: \n\n{}".format(msg)])
 
-        ##escrever_arquivo("cifra", arquivo)
+        escrever_arquivo("cifra", arquivo)
+
+        janela_criptografia.withdraw();
+
+        criptografo_sucesso();
+        
 
 
     
@@ -62,15 +138,25 @@ def janela_criptografia():
     janela.withdraw()
 
     
-    lbl1_criptografia = Label(janela_criptografia,text="Insira uma mensagem para criptografar",bg="green",height = 3);
+    lbl1_criptografia = Label(janela_criptografia,text="Insira uma mensagem para criptografar",height = 3);
     lbl1_criptografia.pack(fill="both");
     
     msg_criptografia = Entry(janela_criptografia);
-    msg_criptografia.place(x=70,y=90);
+    msg_criptografia["width"] = 30
+    msg_criptografia.pack();
+
+    lbl1_chave = Label(janela_criptografia,text="Insira uma mensagem para servir de chave criptografica",height = 3);
+    lbl1_chave.pack(fill="both");
+
+    msg_chave = Entry(janela_criptografia);
+    msg_chave["width"] = 30
+    msg_chave.pack();
+
+    Label(janela_criptografia,text="",height=3).pack()
     
-    btn_criptografar = Button(janela_criptografia,text="Criptografar",width = 15);
+    btn_criptografar = Button(janela_criptografia,text="Criptografar",width = 15,pady=10);
     btn_criptografar["command"] = partial(processo_criptografar);
-    btn_criptografar.place(x=70,y=130);
+    btn_criptografar.pack();
     
     btn_voltar = Button(janela_criptografia, text="Voltar para a tela Inicial",padx=5,pady=7)
     btn_voltar.pack(anchor="s", side="left")
@@ -94,6 +180,26 @@ def janela_criptografia():
 
 
 def janela_descriptografia():
+
+
+    def descriptografo_sucesso(mensagem):
+        descriptografado = Tk();
+        descriptografado.geometry("300x250");
+        descriptografado.resizable(False,False);
+        
+        lbl_sucesso = Label(descriptografado,text="Mensagem descriptografada com sucesso!!",pady=50);
+        lbl_sucesso.pack(anchor="center",fill="x");
+
+        lbl_mensagem_descriptograda = Label(descriptografado,text=mensagem);
+        lbl_mensagem_descriptograda.pack(anchor="center",fill="x");
+        Label(janela_criptografia,text="",height=3).pack()
+        btn_voltar = Button(descriptografado, text="Voltar para a tela Inicial",padx=5,pady=7)
+        btn_voltar.pack()
+        btn_voltar["command"] = partial(voltar_tela, descriptografado);
+
+        descriptografado.mainloop();
+
+        
 
     dicio_decript = {1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f', 7: 'g', 8: 'h', 9: 'i', 10: 'j', 11: 'k', 12: 'l', 13: 'm', 14: 'n',
  15: 'o', 16: 'p', 17: 'q', 18: 'r', 19: 's', 20: 't', 21: 'u', 22: 'v', 23: 'w', 24: 'x', 25: 'y', 26: 'z', 27: 'A',
@@ -129,17 +235,19 @@ def janela_descriptografia():
         
         global chave_dec
         
-        ##msg = escolha("cls", "Digite a mensagem a ser Descriptografada: ", "cls")
+        msg = str(msg_descriptografia.get())
                
         # Recepção da Chave, retomada de chave invalida!
         while len(chave_dec) != 3:
             
-            chave_dec = list(escolha("", "\nDigite a chave de Desencriptação: \n\n", ""))
+            chave_dec = list(msg_chave_descript.get())
             chave_dec = "".join(chave_dec)
             chave_dec = chave_dec.split("-")
-            clean()
+            
         
         msg = descriptografar(msg)
+
+        descriptografo_sucesso(msg)
         
         ##print("\nMensagem Descriptografada: \n\n{} \n".format(msg))
         ##print("-------------------------------------------\n\n\n")
@@ -148,6 +256,26 @@ def janela_descriptografia():
     janela_descriptografia = Tk()
     estilo_janelas(janela_descriptografia)
     janela.withdraw()
+
+    lbl1_descriptografia = Label(janela_descriptografia,text="Insira uma mensagem para descriptografa-la",height = 3);
+    lbl1_descriptografia.pack(fill="both");
+    
+    msg_descriptografia = Entry(janela_descriptografia);
+    msg_descriptografia["width"] = 30
+    msg_descriptografia.pack();
+
+    lbl1_chave_descript = Label(janela_descriptografia,text="Insira a chave  descriptográfica",height = 3);
+    lbl1_chave_descript.pack(fill="both");
+
+    msg_chave_descript = Entry(janela_descriptografia);
+    msg_chave_descript["width"] = 30
+    msg_chave_descript.pack();
+
+    Label(janela_descriptografia,text="",height=3).pack()
+    
+    btn_descriptografar = Button(janela_descriptografia,text="Descriptografar",width = 15,pady=10);
+    btn_descriptografar["command"] = partial(processo_descriptografar);
+    btn_descriptografar.pack();
 
     btn_voltar = Button(janela_descriptografia, text="Voltar para a tela Inicial",padx=5,pady=7)
     btn_voltar.pack(anchor="s", side="left")
@@ -193,6 +321,8 @@ def voltar_tela(tela):
 janela = Tk()
 janela.title("APS Aplicação");
 janela.geometry("350x400");
+
+chave_dec = ""
 
 # Criando elementos da janela inicial e definindo funções
 
