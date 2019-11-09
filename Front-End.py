@@ -2,7 +2,6 @@ from tkinter import *
 from functools import partial
 import os
 import sys
-import random
 import Algoritmo_Criptográfico as algoritmo
 
 def criptografo_sucesso():
