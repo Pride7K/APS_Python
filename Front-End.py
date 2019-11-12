@@ -4,6 +4,18 @@ import os
 import sys
 import Algoritmo_Criptográfico as algoritmo
 
+def aviso(mensagem):
+    
+    aviso_sistema = Tk();
+    aviso_sistema.geometry("300x60");
+    aviso_sistema.resizable(False,False);
+
+    lbl_aviso_sistema = Label(aviso_sistema,text=mensagem);
+    lbl_aviso_sistema.pack(anchor="center",fill="x");
+    Label(aviso_sistema,text="",height=3).pack()
+
+    aviso_sistema.mainloop()
+
 def criptografo_sucesso():
     
     criptografado = Tk()
@@ -28,10 +40,13 @@ def janela_criptografia():
         msg       = str(msg_criptografia.get())
         key       = list(msg_chave.get())
 
+        if msg == "":
+            aviso("Digite uma mensagem!!!")
+            return
+        
         algoritmo.processo_criptografar(msg, key)
         
         janela_criptografia.withdraw();
-
         criptografo_sucesso()
         
 
@@ -104,19 +119,34 @@ def janela_descriptografia():
         descriptografado.mainloop()
 
 
+
+
     def processo_descriptografar():
         
-        chave_dec = ""
         msg       = str(msg_descriptografia.get())
+        chave_dec = msg_chave_descript.get()
+
+        if msg == "":
+            aviso("Digite uma mensagem!!!")
+            return
         
-        # Recepção da Chave, retomada de chave invalida!
-        while len(chave_dec) != 3:
+        validar_chave = len(chave_dec.split("-")) == 3
+
+        for sub_key in chave_dec.split("-"):
             
-            chave_dec = list(msg_chave_descript.get())
-            chave_dec = "".join(chave_dec)
-            chave_dec = chave_dec.split("-")
+            if sub_key.isnumeric():
+                if not int(sub_key) > 0:
+                    validar_chave = False
+                    break
+                
+            else:
+                validar_chave = False
+                break
         
-        chave_dec = "-".join(chave_dec)
+        if not validar_chave:
+            aviso("Chave Invalida!!!")
+            return
+
         
         msg = algoritmo.processo_descriptografar(msg, chave_dec)
         
