@@ -4,14 +4,21 @@ import os
 import sys
 import Algoritmo_Criptográfico as algoritmo
 
+
+
 def aviso(mensagem):
+
+    def voltar():
+        aviso_sistema.withdraw()
     
     aviso_sistema = Tk();
-    aviso_sistema.geometry("300x60");
+    aviso_sistema.geometry("300x250");
+    aviso_sistema .title("AVISO")
     aviso_sistema.resizable(False,False);
 
     lbl_aviso_sistema = Label(aviso_sistema,text=mensagem);
-    lbl_aviso_sistema.pack(anchor="center",fill="x");
+    lbl_aviso_sistema.pack(anchor="center",fill="x",pady=50);
+    Button(aviso_sistema,text="Voltar",width=30,command=voltar).pack();
     Label(aviso_sistema,text="",height=3).pack()
 
     aviso_sistema.mainloop()
@@ -21,7 +28,7 @@ def criptografo_sucesso():
     criptografado = Tk()
     criptografado.geometry("300x250")
     criptografado.resizable(False,False)
-    
+    criptografado.title("Criptografia concluida com sucesso!");
     lbl_sucesso = Label(criptografado,text="Mensagem criptografada com sucesso!!",pady=50)
     lbl_sucesso.pack(anchor="center",fill="x")
     
@@ -104,8 +111,9 @@ def janela_descriptografia():
     def descriptografo_sucesso(mensagem):
         descriptografado = Tk();
         descriptografado.geometry("300x250");
+        descriptografado.title("Descriptografia concluida com sucesso!");
         descriptografado.resizable(False,False);
-        
+        janela_descriptografia.withdraw()
         lbl_sucesso = Label(descriptografado,text="Mensagem descriptografada com sucesso!!",pady=50);
         lbl_sucesso.pack(anchor="center",fill="x");
 
